@@ -24,5 +24,10 @@ select * from Purchases;
 select * from Sessions;
 
 --TABLE NAME : SOCIAL ENGAGEMENTS 
---DEFINITION : RECORDS OF USER ACTIVITY ON A CERTAIN DATE
+--DEFINITION : RECORDS OF USER ACTIVITY WITH OTHER PLAYERS
 select * from SocialEngagements;
+
+
+--TABLE NAME : USERS 
+--DEFINITION : USERS'S PERSONAL DETAILS
+select * from Users;

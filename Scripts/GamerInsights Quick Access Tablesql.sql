@@ -18,11 +18,7 @@ SELECT
     [SessionLength],
     [SessionType], 
     [LevelReached], 
-    [Publisher], 
-    [Rating], 
-    [ReleaseDate], 
-    [Genre], 
-    [Developer]
+    [ReleaseDate]
 INTO #quickaccess
 FROM Users u 
 LEFT JOIN Sessions s ON u.UserID = s.UserID
@@ -39,19 +35,17 @@ RIGHT JOIN Games g ON g.GameID = s.GameID;
  from #quickaccess
  group by GameID,GameName)t1;
 
-
  select * from #quickaccess;
 
-
   --Rank countries having most number of players
- select *,
- RANK() over(order by NoOfPlayers DESC) 'Rank'
- from(
- SELECT 
- Country,
- COUNT(distinct UserID) 'NoOfPlayers' 
- from #quickaccess
- group by Country)t1;
+select *,
+RANK() over(order by NoOfPlayers DESC) 'Rank'
+from(
+SELECT 
+Country,
+COUNT(distinct UserID) 'NoOfPlayers' 
+from #quickaccess
+group by Country)t1;
 
 
 --Show games and gender distribution
@@ -59,4 +53,4 @@ SELECT
 GameID,
 GameName
 from #quickaccess
-/*Yet To Be Coded
+/*Yet To Be Coded*/

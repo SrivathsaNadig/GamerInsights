@@ -73,3 +73,22 @@ group by GameID,GameName;
  GROUP BY GameID,
 		  UserID,
 		  UserName;
+
+
+
+
+
+
+
+
+
+--DAU
+select
+	GameID,
+	GameName,
+	DATETRUNC(DAy,SessionStart) 'Daily',
+	COUNT(UserID) 'SESSIONCount',
+	COUNT(distinct UserID) 'USERCount'
+from #quickaccess
+GROUP BY GameID,GameName,DATETRUNC(DAy,SessionStart)
+ORDER BY GameID,DATETRUNC(DAy,SessionStart);

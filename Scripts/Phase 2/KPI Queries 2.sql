@@ -1,57 +1,48 @@
-/*HERE, ANALYSIS AS PER KPIS WILL BE PERFORMED ON A COMPLEX AND A LARGER DATASET
+-- DAILY ACTIVE USERS (DAU)
+SELECT
+    DATETRUNC(DAY, s.session_start) AS "date",
+    COUNT(DISTINCT user_id) AS "DAU"
+FROM [sessions] s
+GROUP BY DATETRUNC(DAY, s.session_start)
+ORDER BY 1;
 
-THE DATA SYNTHESIZED HERE BELONGS TO ONLY ONE FICTIONAL GAME */
+-- MONTHLY ACTIVE USERS (MAU)
+SELECT
+    DATETRUNC(MONTH, s.session_start) AS "date",
+    COUNT(DISTINCT user_id) AS "MAU"
+FROM [sessions] s
+GROUP BY DATETRUNC(MONTH, s.session_start)
+ORDER BY 1;
 
-
---DAILY ACTIVE USERS (DAU)
-
-select
-	datetrunc(DAY,s.session_start) 'date',
-	COUNT(distinct user_id) 'DAU'
-from [sessions] s 
-group by datetrunc(DAY,s.session_start)
-order by 1;
-
---MONTHLY ACTIVE USERS (DAU)
-
-select
-	datetrunc(MONTH,s.session_start) 'date',
-	COUNT(distinct user_id) 'DAU'
-from [sessions] s 
-group by datetrunc(MONTH,s.session_start)
-order by 1;
-
---Average Session Length
-select avg(datediff(HOUR,session_start,session_end)) 'Average Session Length'
-from sessions;
-
---Level Completion Rate
+-- AVERAGE SESSION LENGTH
 SELECT 
-	count(distinct user_id)* 100/(select count(*) from users) 'Level Completion Rate This Banner'
-FROM
-	events
-WHERE event_type = 'level_completion' ;
+    AVG(DATEDIFF(HOUR, session_start, session_end)) AS "Average Session Length"
+FROM sessions;
 
-select name as tablenname from sys.tables
-
-
---CHURN RATE   (say 25 days)
-
-select 
-	count(datediff(day,last_active,GETDATE()))/(select count(user_id) *0.01 from users) 'churnrate'
-from users
-where 	datediff(day,last_active,GETDATE())>=25;
-
---OR
-
+-- LEVEL COMPLETION RATE
 SELECT 
-	COUNT(*) * 100 /(select count(*) from users) 'Churnrate'
-FROM USERS 
-	WHERE last_active < dateadd(DAY,-25,GETDATE())
+    COUNT(DISTINCT user_id) * 100.0 / (SELECT COUNT(*) FROM users) AS "Level Completion Rate"
+FROM events
+WHERE event_type = 'level_completion';
 
+-- LIST TABLES IN THE DATABASE
+SELECT name AS "Table Name"
+FROM sys.tables;
 
--- Retention Rate
+-- CHURN RATE (for users inactive for 25 days)
+-- Option 1
+SELECT 
+    COUNT(DATEDIFF(DAY, last_active, GETDATE())) / (SELECT COUNT(user_id) * 0.01 FROM users) AS "Churn Rate"
+FROM users
+WHERE DATEDIFF(DAY, last_active, GETDATE()) >= 25;
 
+-- Option 2 (more standard approach)
+SELECT 
+    COUNT(*) * 100.0 / (SELECT COUNT(*) FROM users) AS "Churn Rate"
+FROM users
+WHERE last_active < DATEADD(DAY, -25, GETDATE());
+
+-- RETENTION RATE (sessions where session_end > session_start)
 SELECT *
 FROM Sessions
 WHERE session_end > session_start;

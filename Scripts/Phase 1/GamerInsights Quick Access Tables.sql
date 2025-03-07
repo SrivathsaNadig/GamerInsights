@@ -8,8 +8,8 @@ SELECT
     g.[GameID], 
     [GameName], 
     [RegistrationDate],
-    [Platform],
-    [AchievementsUnlocked],
+[Device],
+[AchievementsUnlocked],
     [LastLogin],
     [TotalPlayTime],
     [SessionID], 
@@ -23,5 +23,6 @@ INTO #quickaccess
 FROM Users u 
 LEFT JOIN Sessions s ON u.UserID = s.UserID
 RIGHT JOIN Games g ON g.GameID = s.GameID;
+
 
 

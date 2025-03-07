@@ -69,3 +69,11 @@ ORDER BY LastActiveMonth;
 SELECT UserID, SUM(Amount) / COUNT(DISTINCT UserID) AS 'LTV'
 FROM Purchases
 GROUP BY UserID;
+
+--Devices Preferred to Play The Games
+select 
+GameID,GameName,
+Device,
+count(Device) 'NoOfUsers'
+from #quickaccess
+group by gameID,GameName,Device;

@@ -1,4 +1,4 @@
--- DAILY ACTIVE USERS (DAU)
+﻿-- DAILY ACTIVE USERS (DAU)
 SELECT
     DATETRUNC(DAY, s.session_start) AS "date",
     COUNT(DISTINCT user_id) AS "DAU"
@@ -46,3 +46,13 @@ WHERE last_active < DATEADD(DAY, -25, GETDATE());
 SELECT *
 FROM Sessions
 WHERE session_end > session_start;
+
+
+
+--Retention Rate
+SELECT (COUNT(DISTINCT s1.user_id) * 100.0 / COUNT(DISTINCT s2.user_id)) AS Retention_Rate
+FROM Sessions s1
+JOIN Sessions s2
+  ON s1.user_id = s2.user_id
+  AND DATEDIFF(DAY, s2.session_start, s1.session_start) BETWEEN 1 AND 7
+WHERE s2.session_start >= DATEADD(DAY, -30, GETDATE());
